@@ -13,22 +13,20 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         DB::beginTransaction();
-
         try {
             // Login
             if (Auth::guard('admin')->attempt(['email' => request('email'),
                 'password' => request('password')])) {
+
                 return redirect()->route('admin.subscribers.index')
                     ->with('success', 'Logged In Successfully');
             } else {
-                return back()->with('error', 'Bad credentials');
+                return redirect()->route('admin.login')->with('error', 'Bad credentials');
             }
-
             DB::commit();
-
         } catch (\Exception $e) {
             DB::rollback();
-
+            return redirect()->route('admin.login')->with('error');
         }
     }
 
@@ -37,6 +35,6 @@ class AuthController extends Controller
         Auth::guard('admin')->logout();
         $request->session()->flush();
         $request->session()->regenerate();
-        return redirect('/login')->with('success', 'Logged Out Successfully');
+        return redirect()->route('admin.login')->with('success', 'Logged Out Successfully');
     }
 }

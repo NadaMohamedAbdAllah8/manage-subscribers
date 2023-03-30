@@ -17,24 +17,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['prefix' => '', 'namespace' => 'App\Http\Controllers\Admin'], function () {
+Route::group(['prefix' => '', 'namespace' => 'App\Http\Controllers\Admin', 'as' => 'admin.'], function () {
     Route::get('login', function () {
-        return view('admins.pages.auth.login');
-    });
+        return view('admin.pages.auth.login');
+    })->name('login');
 
-    Route::post('login', 'AuthController@login')
-        ->name('login');
+    Route::post('login-post', 'AuthController@login')->name('login-post');
 
     Route::group(['middleware' => 'auth:admin'], function () {
-
         // logout
-        Route::get('logout', 'AuthController@logout')->name('logout');
+        Route::post('logout', 'AuthController@logout')->name('logout');
 
         /**
          * Subscribers Module Routes
          */
         Route::resource('subscribers', 'SubscriberController')->except(['show']);
-
         Route::prefix('subscribers')->group(function () {
             Route:: as ('subscribers.')->group(function () {
                 Route::get('data', 'SubscriberController@data')->name('data');

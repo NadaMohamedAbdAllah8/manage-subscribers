@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class SubscriberController extends Controller
 {
@@ -14,7 +15,17 @@ class SubscriberController extends Controller
      */
     public function index()
     {
-        dd('hi in the index');
+       // dd(Auth::guard('admin')->user()->name);
+        //dd('hi in the index');
+
+        $data = [
+            'title' => 'Subscribers',
+            'subscribers' => [],
+            'message' => 'Hello!',
+        ];
+
+        return view('admin.pages.subscribers.index', $data);
+
     }
 
     /**
