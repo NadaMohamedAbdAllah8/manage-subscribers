@@ -22,13 +22,11 @@ class SubscriberController extends Controller
     public function index()
     {
         if ($this->subscriber_service->validateAPIKey() == false) {
-            echo 'condition is true';
             $data = [
                 'title' => 'Subscribers',
                 'subscribers' => [],
                 'message' => 'API key is invalid!',
             ];
-
             return view('admin.pages.subscribers.index', $data);
         }
 
@@ -48,7 +46,10 @@ class SubscriberController extends Controller
      */
     public function create()
     {
-
+        $data = [
+            'title' => 'Create Subscriber',
+        ];
+        return view('admin.pages.subscribers.create', $data);
     }
 
     /**
@@ -57,20 +58,19 @@ class SubscriberController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+    public function store(
+        //StoreRequest
+        Request $request) {
+        //dd($request->all());
+        $result = $this->subscriber_service->store($request);
+        // dd($result['error_messages']);
+        if ($result['success'] == false) {
+            return redirect(route('admin.subscribers.index'))
+                ->with('error', $result['error_message']);
+        } else {
+            return redirect(route('admin.subscribers.index'))
+                ->with('success', 'Subscriber Created');
+        }
     }
 
     /**
@@ -81,7 +81,13 @@ class SubscriberController extends Controller
      */
     public function edit($id)
     {
-        //
+        // fetch a subscriber GET https://connect.mailerlite.com/api/subscribers/(:id or :email)
+        $data = [
+            'title' => 'Create Subscriber',
+            'subscriber' => $id,
+        ];
+        return view('admin.pages.subscribers.edit', $data);
+
     }
 
     /**
