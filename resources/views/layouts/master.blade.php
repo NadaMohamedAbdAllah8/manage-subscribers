@@ -17,8 +17,8 @@ License: You must have a valid license purchased only from themeforest(the above
 <head>
     <base href="">
     <meta charset="utf-8" />
-    <title>Manage Products | @yield('title')</title>
-    <meta name="description" content="Manage Products" />
+    <title>Manage Subscribers | @yield('title')</title>
+    <meta name="description" content="Manage Subscribers" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {{-- styles --}}
