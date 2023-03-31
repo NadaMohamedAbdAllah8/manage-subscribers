@@ -2,15 +2,20 @@
 @extends('admin.layouts.header')
 
 @section('title')
-    {{ $title }}
+    {{ $title ?? 'Subscribers' }}
 @endsection
 
 @section('content')
+    @if ($message)
+        <div class="alert alert-danger text-center" style="">
+            {!! $message !!}
+        </div>
+    @endif
     <div class="container">
         <a href="{{ route('admin.subscribers.create') }}" class="btn btn-primary actionbtn">
             Create Subscriber
         </a>
-        @if (count($subscribers) == 0)
+        @if (isset($subscribers) && count($subscribers) == 0)
             <p>No records</p>
         @else
             <table class="table">
