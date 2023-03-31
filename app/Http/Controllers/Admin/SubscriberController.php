@@ -3,11 +3,17 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Services\SubscriberService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class SubscriberController extends Controller
 {
+    protected $subscriber_service;
+    public function __construct(SubscriberService $subscriber_service)
+    {
+        $this->subscriber_service = $subscriber_service;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,17 +21,24 @@ class SubscriberController extends Controller
      */
     public function index()
     {
-       // dd(Auth::guard('admin')->user()->name);
-        //dd('hi in the index');
+        if ($this->subscriber_service->validateAPIKey() == false) {
+            echo 'condition is true';
+            $data = [
+                'title' => 'Subscribers',
+                'subscribers' => [],
+                'message' => 'API key is invalid!',
+            ];
+
+            return view('admin.pages.subscribers.index', $data);
+        }
 
         $data = [
             'title' => 'Subscribers',
             'subscribers' => [],
-            'message' => 'Hello!',
+            'message' => null,
         ];
 
         return view('admin.pages.subscribers.index', $data);
-
     }
 
     /**
@@ -35,7 +48,7 @@ class SubscriberController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
