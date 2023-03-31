@@ -987,3 +987,4 @@ tools/php-cs-fixer/vendor/symfony/string/Resources/data/wcswidth_table_zero.php
 tools/php-cs-fixer/vendor/symfony/string/Slugger/AsciiSlugger.php
 tools/php-cs-fixer/vendor/symfony/string/Slugger/SluggerInterface.php
 .php-cs-fixer.cache
+composer.lock
