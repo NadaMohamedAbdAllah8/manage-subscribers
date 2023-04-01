@@ -10,7 +10,6 @@ class SubscriberService
 {
     private static $api_key = null;
     private static $headers = [];
-    private $response;
 
     public function __construct()
     {
@@ -34,10 +33,9 @@ class SubscriberService
     public function validateAPIKey()
     {
         if (!is_null(self::$api_key)) {
-            // dd(self::$api_key);
             return true;
         }
-        dd('storing the key');
+
         // insert the api key in the database
         $setting = $this->storeAPIKey();
         if ($this->checkAPIKey($setting)) {
@@ -115,21 +113,19 @@ class SubscriberService
         }
         // 401 Unauthorized
         if ($error_code == 401) {
-            $error_message = 'Please make sure that the API key is valid.';
+            $error_message = 'Please make sure the API key is valid.';
         }
         // 403 Forbidden
         if ($error_code == 403) {
             $error_message = 'Please check that you have the permission to perform this action.';
         }
-        // 404 Not Found: This error code usually means that the endpoint you are trying to access does not exist or is incorrect.
+        // 404 Not Found
         if ($error_code == 404) {
             $error_message = 'The endpoint is not found.';
         }
         // 422 Unprocessable Entity
         if ($error_code === 422) {
-            $error_message = 'Validation error.'
-            // . implode(',', $full_errors)
-            ;
+            $error_message = 'Validation error. ' . $data['error_details']['message'];
         }
         //429 Too Many Requests
         if ($error_code == 429) {
@@ -139,6 +135,7 @@ class SubscriberService
         if ($error_code == 500) {
             $error_message = 'MailerLite returned an error, please try again in a few minutes.';
         }
-        return $error_message . ' ' . $data['error_details']['message'];
+
+        return $error_message;
     }
 }
