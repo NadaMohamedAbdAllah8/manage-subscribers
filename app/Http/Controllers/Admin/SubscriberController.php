@@ -4,15 +4,15 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Subscriber\StoreRequest;
-use App\Services\SubscriberService;
+use App\Services\Subscriber;
 use Illuminate\Http\Request;
 
 class SubscriberController extends Controller
 {
-    protected $subscriber_service;
-    public function __construct(SubscriberService $subscriber_service)
+    protected $subscriber;
+    public function __construct(Subscriber $subscriber)
     {
-        $this->subscriber_service = $subscriber_service;
+        $this->subscriber = $subscriber;
     }
 
     /**
@@ -22,7 +22,7 @@ class SubscriberController extends Controller
      */
     public function index()
     {
-        if ($this->subscriber_service->validateAPIKey() == false) {
+        if ($this->subscriber->validateAPIKey() == false) {
             $data = [
                 'title' => 'Subscribers',
                 'subscribers' => [],
@@ -31,9 +31,11 @@ class SubscriberController extends Controller
             return view('admin.pages.subscribers.index', $data);
         }
 
+        $subscribers = $this->subscriber->listSubscribers()['data']['subscribers'];
+        //  dd($subscribers[0]->fields);
         $data = [
             'title' => 'Subscribers',
-            'subscribers' => [],
+            'subscribers' => $subscribers,
             'message' => null,
         ];
         return view('admin.pages.subscribers.index', $data);
@@ -60,7 +62,7 @@ class SubscriberController extends Controller
      */
     public function store(StoreRequest $request)
     {
-        $result = $this->subscriber_service->store($request);
+        $result = $this->subscriber->store($request);
         if ($result['success'] == false) {
             return redirect(route('admin.subscribers.index'))
                 ->with('error', $result['error_message']);

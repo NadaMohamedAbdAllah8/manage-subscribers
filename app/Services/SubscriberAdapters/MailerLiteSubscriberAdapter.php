@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Services;
+namespace App\Services\SubscriberAdapters;
 
 use App\Models\Setting;
+use App\Services\Subscriber;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
 
-class SubscriberService
+class MailerLiteSubscriberAdapter implements Subscriber
 {
     private static $api_key = null;
     private static $headers = [];
