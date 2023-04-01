@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Setting;
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 class SubscriberService
 {
@@ -33,11 +34,12 @@ class SubscriberService
     public function validateAPIKey()
     {
         if (!is_null(self::$api_key)) {
+            // dd(self::$api_key);
             return true;
         }
+        dd('storing the key');
         // insert the api key in the database
-        $this->storeAPIKey();
-        $setting = Setting::first();
+        $setting = $this->storeAPIKey();
         if ($this->checkAPIKey($setting)) {
             $this->setHeader($setting->mailer_lite_api_key);
             return true;
@@ -46,10 +48,9 @@ class SubscriberService
         }
     }
 
-    public function store($request)
+    public function store($request): array
     {
         // call api to store
-
         $client = new Client(['base_uri' => 'https://api.mailerlite.com/api/v2/']);
         try {
             $form_params = [
@@ -61,50 +62,25 @@ class SubscriberService
                 'headers' => self::$headers,
                 'json' => $form_params,
             ]);
-            // dd($response->getBody()->getContents());
-            // dd($response);
-            // dd($response->errors);
-            // an error happened
-            if ($response->statueCode != 200) {
-                return ['success' => true,
-                    'error_message' => 'there is an error'];
-            }
             return ['success' => true,
                 'error_message' => null];
-        } catch (\Exception $e) {
-
-            // $error_code = $e->getCode();
-            // if ($error_code == 429) {
-            //     $body = $response->getBody()->getContents();
-            //     dd($body);
-
-            //     return ['success' => false,
-            //         'error_message' => 'Too many request, try again later.',
-            //     ];
-            // }
-
-            // if ($error_code === 422) {
-            //     $body = $response->getBody()->getContents();
-            //     dd($body);
-            //     $data = json_decode($body, true, 512, JSON_THROW_ON_ERROR);
-
-            //     return ['success' => false,
-            //         'error_message' => 'Make sure that the email is valid.',
-            //     ];
-            // }
-
-         //   dd($e->getMessage());
+        } catch (ClientException $e) {
+            $error_message = $this->errorMessagesToView($e->getResponse());
             return ['success' => false,
-                'error_message' => $e->getMessage()
+                'error_message' => $error_message,
             ];
 
+        } catch (\Exception $e) {
+            return ['success' => false,
+                'error_message' => $e->getMessage(),
+            ];
         }
 
     }
 
-    private function storeAPIKey()
+    private function storeAPIKey(): Setting
     {
-        Setting::create([
+        return Setting::create([
             'mailer_lite_api_key' => config('mailer_lite.api_key'),
         ]);
     }
@@ -125,5 +101,44 @@ class SubscriberService
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    private function errorMessagesToView($response): string
+    {
+        $body = $response->getBody()->getContents();
+        $data = json_decode($body, true);
+        $error_code = $response->getStatusCode();
+        $error_message = "";
+        // 400 Bad Request
+        if ($error_code == 400) {
+            $error_message = 'Please check your request.';
+        }
+        // 401 Unauthorized
+        if ($error_code == 401) {
+            $error_message = 'Please make sure that the API key is valid.';
+        }
+        // 403 Forbidden
+        if ($error_code == 403) {
+            $error_message = 'Please check that you have the permission to perform this action.';
+        }
+        // 404 Not Found: This error code usually means that the endpoint you are trying to access does not exist or is incorrect.
+        if ($error_code == 404) {
+            $error_message = 'The endpoint is not found.';
+        }
+        // 422 Unprocessable Entity
+        if ($error_code === 422) {
+            $error_message = 'Validation error.'
+            // . implode(',', $full_errors)
+            ;
+        }
+        //429 Too Many Requests
+        if ($error_code == 429) {
+            $error_message = 'Too many request, please try again in a few minutes.';
+        }
+        // 500 Internal Server Error
+        if ($error_code == 500) {
+            $error_message = 'MailerLite returned an error, please try again in a few minutes.';
+        }
+        return $error_message . ' ' . $data['error_details']['message'];
     }
 }
