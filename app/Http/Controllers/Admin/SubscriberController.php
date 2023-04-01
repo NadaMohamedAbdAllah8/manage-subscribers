@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Subscriber\StoreRequest;
 use App\Services\SubscriberService;
 use Illuminate\Http\Request;
 
@@ -35,7 +36,6 @@ class SubscriberController extends Controller
             'subscribers' => [],
             'message' => null,
         ];
-
         return view('admin.pages.subscribers.index', $data);
     }
 
@@ -58,12 +58,9 @@ class SubscriberController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(
-        //StoreRequest
-        Request $request) {
-        //dd($request->all());
+    public function store(StoreRequest $request)
+    {
         $result = $this->subscriber_service->store($request);
-        // dd($result['error_messages']);
         if ($result['success'] == false) {
             return redirect(route('admin.subscribers.index'))
                 ->with('error', $result['error_message']);
