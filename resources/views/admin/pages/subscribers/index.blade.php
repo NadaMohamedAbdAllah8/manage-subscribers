@@ -36,6 +36,7 @@
 
 @section('scripts')
     <script type="text/javascript">
+        // swal("Hello world!");
         console.log('hi');
 
         $('#subscribers').DataTable({
@@ -75,46 +76,44 @@
         }).ajax.reload();
 
         // Delete subscriber data
-        // var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-        // $("#subscribers").on('click', '.delete', function() {
-        //     Swal.fire({
-        //         title: 'Are you sure to delete this subscriber data?',
-        //         text: "You won't be able to revert this!",
-        //         icon: 'warning',
-        //         showCancelButton: true,
-        //         confirmButtonColor: '#3085d6',
-        //         cancelButtonColor: '#d33',
-        //         confirmButtonText: 'Yes, delete it!'
-        //     }).then((result) => {
-        //         if (result.value) {
-        //             var content = $(this).data("content");
-        //             var urls = "{{ route('admin.subscribers.destroy', 'id') }}";
-        //             urls = urls.replace('id', content);
-        //             $.ajax({
-        //                 url: urls,
-        //                 method: 'POST',
-        //                 data: {
-        //                     _token: CSRF_TOKEN,
-        //                     id: content,
-        //                     _method: "delete"
-        //                 },
-        //                 dataType: 'JSON',
-        //                 beforeSend: function() {},
-        //                 success: function(data) {
-        //                     $("#subscribers").DataTable().ajax.reload();
-        //                     Swal.fire(
-        //                         'Deleted!',
-        //                         'subscriber has been deleted.',
-        //                         'success'
-        //                     )
-        //                 },
-        //                 error: function(data) {
-        //                     $("#subscribers").DataTable().ajax.reload();
-        //                 }
+        var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+        //  swal("Hello world!");
 
-        //             });
-        //         }
-        //     });
-        // });
+        $("#subscribers").on('click', '.delete', function() {
+            var content = $(this).data("content");
+            var urls = "{{ route('admin.subscribers.destroy', 'id') }}";
+            urls = urls.replace('id', content);
+            $.ajax({
+                url: urls,
+                method: 'POST',
+                data: {
+                    _token: CSRF_TOKEN,
+                    id: content,
+                    _method: "delete"
+                },
+                dataType: 'JSON',
+                beforeSend: function() {},
+                success: function(data) {
+                    $("#subscribers").DataTable().ajax.reload();
+                    // swal("Deleted");
+
+                    swal({
+                        title: "Deleted",
+                        icon: "success",
+                        buttons: false,
+                        timer: 1500
+                    });
+                },
+                error: function(data) {
+                    swal({
+                        title: "Error",
+                        icon: "error",
+                        buttons: false,
+                        timer: 1500
+                    });
+                }
+
+            });
+        });
     </script>
 @endsection
