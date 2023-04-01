@@ -15,7 +15,7 @@
                 <div class="form-group m-form__group row">
                     <div class="col-lg-12">
                         <label for="username"><b>Subscriber Email</b></label>
-                        <input type="text" placeholder="Enter Subscriber Email" name="email" required>
+                        <input type="email" placeholder="Enter Subscriber Email" name="email" required>
                     </div>
 
                 </div>
