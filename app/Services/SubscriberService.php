@@ -10,11 +10,13 @@ class SubscriberService
 {
     private static $api_key = null;
     private static $headers = [];
+    private static $base_uri;
 
     public function __construct()
     {
-        $setting = Setting::first();
+        self::$base_uri = 'https://api.mailerlite.com/api/v2/';
 
+        $setting = Setting::first();
         // check: the api key in the database
         if (!is_null($setting) && !is_null($setting->mailer_lite_api_key)) {
             $this->setHeader($setting->mailer_lite_api_key);
@@ -49,7 +51,7 @@ class SubscriberService
     public function store($request): array
     {
         // call api to store
-        $client = new Client(['base_uri' => 'https://api.mailerlite.com/api/v2/']);
+        $client = new Client(['base_uri' => self::$base_uri]);
         try {
             $form_params = [
                 'email' => $request->email,
@@ -87,7 +89,7 @@ class SubscriberService
     private function checkAPIKey($setting)
     {
         echo 'will make a request to check api key';
-        $client = new Client(['base_uri' => 'https://api.mailerlite.com/api/v2/']);
+        $client = new Client(['base_uri' => self::$base_uri]);
         try {
             $client->get('subscribers', [
                 'headers' => [
