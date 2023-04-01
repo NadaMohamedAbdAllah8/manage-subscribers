@@ -39,7 +39,7 @@ hr {
 .actionbtn {
     background-color: dodgerblue;
     color: white;
-    padding: 16px 20px;
+    padding: 1.5rem;
     margin: 2px;
     border: none;
     cursor: pointer;
@@ -50,6 +50,9 @@ hr {
     /* display: inline-block; */
 }
 
+.table td {
+    text-align: center;
+}
 .actionbtn:hover {
     opacity: 1;
 }

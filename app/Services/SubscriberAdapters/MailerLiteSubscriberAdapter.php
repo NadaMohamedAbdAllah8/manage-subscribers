@@ -79,6 +79,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
         $subscribers_formatted = [];
         $subscribers_count = count($subscribers);
         for ($i = 0; $i < $subscribers_count; $i++) {
+            $subscribers_formatted[$i]['id'] = $subscribers[$i]->id;
             $subscribers_formatted[$i]['email'] = $subscribers[$i]->email;
             $subscribers_formatted[$i]['name'] = $subscribers[$i]->name;
             $subscribers_formatted[$i]['country'] = $this->getCountry($subscribers[$i]->fields);

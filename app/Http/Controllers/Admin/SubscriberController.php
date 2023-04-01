@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Subscriber\StoreRequest;
 use App\Services\Subscriber;
+// use \Debugbar;
 use Illuminate\Http\Request;
+use Yajra\Datatables\Datatables;
 
 class SubscriberController extends Controller
 {
@@ -31,22 +33,36 @@ class SubscriberController extends Controller
             return view('admin.pages.subscribers.index', $data);
         }
 
-        $result = $this->subscriber->listSubscribers();
-        if ($result['success'] === true) {$subscribers = $result['data']['subscribers'];
-            $data = [
-                'title' => 'Subscribers',
-                'subscribers' => $subscribers,
-                'message' => null,
-            ];
-            return view('admin.pages.subscribers.index', $data);
-        } else {
+        // $result = $this->subscriber->listSubscribers();
+        // if ($result['success'] === true) {$subscribers = $result['data']['subscribers'];
+        //     /**return Datatables::of($records)->make(true);
+        //      */
+        //     $data = [
+        //         'title' => 'Subscribers',
+        //         'subscribers' => $subscribers,
+        //         'message' => null,
+        //     ];
+        //     return view('admin.pages.subscribers.index', $data);
+        // }
+        else {
             $data = [
                 'title' => 'Subscribers',
                 'subscribers' => [],
-                'message' => $result['error_message'],
+                'message' => '',
             ];
             return view('admin.pages.subscribers.index', $data);
         }
+    }
+
+    public function data()
+    {
+        $subscribers = [];
+        $result = $this->subscriber->listSubscribers();
+        if ($result['success'] === true) {
+            $subscribers = $result['data']['subscribers'];
+
+        }
+        return Datatables::of($subscribers)->make(true);
     }
 
     /**
