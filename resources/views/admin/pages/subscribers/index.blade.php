@@ -31,11 +31,11 @@
                 <tbody>
                     @foreach ($subscribers as $key => $subscriber)
                         <tr>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
-                            <td>1</td>
+                            <td>{{ $subscriber['email'] }}</td>
+                            <td>{{ $subscriber['name'] }}</td>
+                            <td>{{ $subscriber['country'] }}</td>
+                            <td>{{ $subscriber['subscription_date'] }}</td>
+                            <td>{{ $subscriber['subscription_time'] }}</td>
                         </tr>
                     @endforeach
                 </tbody>

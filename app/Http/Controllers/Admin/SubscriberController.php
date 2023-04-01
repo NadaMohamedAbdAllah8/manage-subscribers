@@ -31,14 +31,22 @@ class SubscriberController extends Controller
             return view('admin.pages.subscribers.index', $data);
         }
 
-        $subscribers = $this->subscriber->listSubscribers()['data']['subscribers'];
-        //  dd($subscribers[0]->fields);
-        $data = [
-            'title' => 'Subscribers',
-            'subscribers' => $subscribers,
-            'message' => null,
-        ];
-        return view('admin.pages.subscribers.index', $data);
+        $result = $this->subscriber->listSubscribers();
+        if ($result['success'] === true) {$subscribers = $result['data']['subscribers'];
+            $data = [
+                'title' => 'Subscribers',
+                'subscribers' => $subscribers,
+                'message' => null,
+            ];
+            return view('admin.pages.subscribers.index', $data);
+        } else {
+            $data = [
+                'title' => 'Subscribers',
+                'subscribers' => [],
+                'message' => $result['error_message'],
+            ];
+            return view('admin.pages.subscribers.index', $data);
+        }
     }
 
     /**

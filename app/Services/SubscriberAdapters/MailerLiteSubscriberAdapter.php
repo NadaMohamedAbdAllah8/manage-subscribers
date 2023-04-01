@@ -57,9 +57,9 @@ class MailerLiteSubscriberAdapter implements Subscriber
             $response = $client->get('subscribers', [
                 'headers' => self::$headers,
             ]);
-
+            $subscribers = $this->formatSubscribersData(json_decode($response->getBody()->getContents()));
             return ['success' => true, 'data' => null,
-                'data' => ['subscribers' => json_decode($response->getBody()->getContents())], 'error_message' => null];
+                'data' => ['subscribers' => $subscribers], 'error_message' => null];
         } catch (ClientException $e) {
             $error_message = $this->errorMessagesToView($e->getResponse());
             return ['success' => false,
@@ -74,6 +74,31 @@ class MailerLiteSubscriberAdapter implements Subscriber
         }
     }
 
+    private function formatSubscribersData($subscribers)
+    {
+        $subscribers_formatted = [];
+        $subscribers_count = count($subscribers);
+        for ($i = 0; $i < $subscribers_count; $i++) {
+            $subscribers_formatted[$i]['email'] = $subscribers[$i]->email;
+            $subscribers_formatted[$i]['name'] = $subscribers[$i]->name;
+            $subscribers_formatted[$i]['country'] = $this->getCountry($subscribers[$i]->fields);
+            $subscribers_formatted[$i]['subscription_date'] =
+                date('d/m/Y', strtotime($subscribers[$i]->date_subscribe));
+            $subscribers_formatted[$i]['subscription_time'] =
+                date('H:i', strtotime($subscribers[$i]->date_subscribe));
+        }
+        return $subscribers_formatted;
+    }
+
+    private function getCountry($fields)
+    {
+        foreach ($fields as $field) {
+            if ($field->key === 'country') {
+                return $field->value;
+            }
+        }
+        return null;
+    }
     public function store($request): array
     {
         // call api to store
@@ -115,7 +140,6 @@ class MailerLiteSubscriberAdapter implements Subscriber
     // make a call to validate the api key
     private function makeRequestToCheckAPIKey($setting): bool
     {
-        //dd('will make a request to check api key');
         $client = new Client(['base_uri' => self::$base_uri]);
         try {
             $client->get('subscribers?limit=0', [
