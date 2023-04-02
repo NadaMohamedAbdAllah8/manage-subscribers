@@ -20,6 +20,7 @@
         <table class="table yajra-datatable table-striped" id="subscribers">
             <thead class="thead-light">
                 <tr>
+                    {{-- <th scope="col">Id</th> --}}
                     <th scope="col">Email</th>
                     <th scope="col">Name</th>
                     <th scope="col">Country</th>
@@ -36,17 +37,18 @@
 
 @section('scripts')
     <script type="text/javascript">
-        // swal("Hello world!");
-        console.log('hi');
-
         $('#subscribers').DataTable({
             "processing": true,
             "serverSide": true,
             'paging': true,
             'info': true,
             "ajax": "{{ route('admin.subscribers.data') }}",
-            "columns": [{
-                    "data": "id"
+            "columns": [
+                // {
+                //     "data": "id"
+                // },
+                {
+                    "data": "email"
                 },
                 {
                     "data": "name"
@@ -64,7 +66,6 @@
                     "mRender": function(data, type, row) {
                         var url = "{{ route('admin.subscribers.edit', 'id') }}";
                         url = url.replace('id', row['id']);
-                        console.log(' about to view');
                         return '<a class="btn btn-primary"  href=' + url +
                             '><i class="fa fa-edit"></i></a> <a style="color:#fff" class="btn btn-danger delete" data-content="' +
                             row['id'] + '"><i class="fa fa-trash"></i></a>';
@@ -77,7 +78,6 @@
 
         // Delete subscriber data
         var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-        //  swal("Hello world!");
 
         $("#subscribers").on('click', '.delete', function() {
             var content = $(this).data("content");
@@ -93,26 +93,27 @@
                 },
                 dataType: 'JSON',
                 beforeSend: function() {},
-                success: function(data) {
+                success: function(response) {
                     $("#subscribers").DataTable().ajax.reload();
-                    // swal("Deleted");
-
                     swal({
                         title: "Deleted",
+                        text: "Deleted successfully",
                         icon: "success",
                         buttons: false,
-                        timer: 1500
+                        timer: 1700
                     });
                 },
-                error: function(data) {
+                error: function(response) {
+                    var errorObj = JSON.parse(response.responseText);
+                    var error = errorObj.error;
                     swal({
                         title: "Error",
+                        text: error,
                         icon: "error",
                         buttons: false,
-                        timer: 1500
+                        timer: 1700
                     });
                 }
-
             });
         });
     </script>

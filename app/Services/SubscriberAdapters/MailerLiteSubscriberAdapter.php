@@ -74,7 +74,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
         }
     }
 
-    private function formatSubscribersData($subscribers)
+    private function formatSubscribersData($subscribers): array
     {
         $subscribers_formatted = [];
         $subscribers_count = count($subscribers);
@@ -82,7 +82,8 @@ class MailerLiteSubscriberAdapter implements Subscriber
             $subscribers_formatted[$i]['id'] = $subscribers[$i]->id;
             $subscribers_formatted[$i]['email'] = $subscribers[$i]->email;
             $subscribers_formatted[$i]['name'] = $subscribers[$i]->name;
-            $subscribers_formatted[$i]['country'] = $this->getCountry($subscribers[$i]->fields);
+            $subscribers_formatted[$i]['country'] =
+            $this->getCountry($subscribers[$i]->fields);
             $subscribers_formatted[$i]['subscription_date'] =
                 date('d/m/Y', strtotime($subscribers[$i]->date_subscribe));
             $subscribers_formatted[$i]['subscription_time'] =
@@ -91,7 +92,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
         return $subscribers_formatted;
     }
 
-    private function getCountry($fields)
+    private function getCountry($fields): string
     {
         foreach ($fields as $field) {
             if ($field->key === 'country') {
@@ -100,6 +101,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
         }
         return null;
     }
+
     public function store($request): array
     {
         // call api to store
@@ -155,6 +157,35 @@ class MailerLiteSubscriberAdapter implements Subscriber
         }
     }
 
+    public function delete($id)
+    {
+        // call api to store
+        $client = new Client(['base_uri' => self::$base_uri]);
+        try {
+            $response = $client->delete("subscribers/$id", [
+                'headers' => self::$headers,
+            ]);
+            return [
+                'success' => true,
+                'error_message' => null,
+                'data' => null,
+            ];
+
+            return true;
+        } catch (ClientException $e) {
+            $error_message = $this->errorMessagesToView($e->getResponse());
+            return ['success' => false,
+                'data' => null,
+                'error_message' => $error_message,
+            ];
+        } catch (\Exception $e) {
+            return ['success' => false,
+                'subscribers' => [],
+                'error_message' => $e->getMessage(),
+            ];
+        }
+    }
+
     private function errorMessagesToView($response): string
     {
         $body = $response->getBody()->getContents();
@@ -175,7 +206,13 @@ class MailerLiteSubscriberAdapter implements Subscriber
         }
         // 404 Not Found
         if ($error_code == 404) {
-            $error_message = 'The endpoint is not found.';
+            $error_message = 'Not found.';
+            if (isset($data['error_details']['message'])) {
+                $error_message .= ' ' . $data['error_details']['message'];
+            }
+            if (isset($data['error']['message'])) {
+                $error_message .= ' ' . $data['error']['message'];
+            }
         }
         // 422 Unprocessable Entity
         if ($error_code === 422) {
