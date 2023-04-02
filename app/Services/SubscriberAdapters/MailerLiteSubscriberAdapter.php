@@ -31,7 +31,6 @@ class MailerLiteSubscriberAdapter implements Subscriber
             'Content-Type' => 'application/json',
             'X-MailerLite-ApiKey' => self::$api_key,
         ];
-
     }
 
     public function validateAPIKey(): bool
@@ -127,7 +126,6 @@ class MailerLiteSubscriberAdapter implements Subscriber
                 'error_message' => $error_message,
                 'data' => null,
             ];
-
         } catch (\Exception $e) {
             return ['success' => false, 'error_message' => $e->getMessage(), 'data' => null];
         }
@@ -171,7 +169,10 @@ class MailerLiteSubscriberAdapter implements Subscriber
                 'data' => null,
             ];
 
-            return true;
+            return ['success' => true,
+                'data' => null,
+                'error_message' => "",
+            ];
         } catch (ClientException $e) {
             $error_message = $this->errorMessagesToView($e->getResponse());
             return ['success' => false,

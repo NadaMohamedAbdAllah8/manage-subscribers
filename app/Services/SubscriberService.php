@@ -30,7 +30,6 @@ class SubscriberService
             'Content-Type' => 'application/json',
             'X-MailerLite-ApiKey' => self::$api_key,
         ];
-
     }
 
     public function validateAPIKey(): bool
@@ -98,7 +97,6 @@ class SubscriberService
                 'error_message' => $error_message,
                 'data' => null,
             ];
-
         } catch (\Exception $e) {
             return ['success' => false, 'error_message' => $e->getMessage(), 'data' => null];
         }

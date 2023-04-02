@@ -60,7 +60,6 @@ class SubscriberController extends Controller
         $result = $this->subscriber->listSubscribers();
         if ($result['success'] === true) {
             $subscribers = $result['data']['subscribers'];
-
         }
         return Datatables::of($subscribers)->make(true);
     }
@@ -110,7 +109,6 @@ class SubscriberController extends Controller
             'subscriber' => $id,
         ];
         return view('admin.pages.subscribers.edit', $data);
-
     }
 
     /**
@@ -133,17 +131,18 @@ class SubscriberController extends Controller
      */
     public function destroy($id)
     {
-        try { $result = $this->subscriber->delete($id);
+        try {
+            $result = $this->subscriber->delete($id);
             if ($result['success']) {
                 return response()->json([], 200);
             } else {
                 //return $result['error_message'];
                 return response()->json(['error' => $result['error_message'], 'id' => $id], 500)
                     ->header('Content-Type', 'application/json');
-            }} catch (\Exception $e) {
+            }
+        } catch (\Exception $e) {
             return response()->json(['error' => 'Cannot delete!', 'id' => $id], 500)
                 ->header('Content-Type', 'application/json');
-
         }
     }
 }
