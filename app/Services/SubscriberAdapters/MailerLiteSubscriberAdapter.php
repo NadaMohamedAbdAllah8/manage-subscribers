@@ -157,7 +157,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
         }
     }
 
-    public function delete($id)
+    public function delete($id): array
     {
         // call api to store
         $client = new Client(['base_uri' => self::$base_uri]);
