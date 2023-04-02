@@ -20,7 +20,7 @@
         <table class="table yajra-datatable table-striped" id="subscribers">
             <thead class="thead-light">
                 <tr>
-                    {{-- <th scope="col">Id</th> --}}
+                    <th scope="col">#</th>
                     <th scope="col">Email</th>
                     <th scope="col">Name</th>
                     <th scope="col">Country</th>
@@ -43,48 +43,56 @@
             'paging': true,
             'info': true,
             "ajax": "{{ route('admin.subscribers.data') }}",
-            "columns": [
-                // {
-                //     "data": "id"
-                // },
+            "columnDefs": [{
+                    "targets": 0, // target the first column (id)
+                    "data": "id",
+                },
                 {
+                    "targets": 1, // target the second column (email)
                     "data": "email"
                 },
                 {
+                    "targets": 2, // target the third column (name)
                     "data": "name"
                 },
                 {
+                    "targets": 3, // target the fourth column (country)
                     "data": "country"
                 },
                 {
+                    "targets": 4, // target the fifth column (subscription_date)
                     "data": "subscription_date"
                 },
                 {
+                    "targets": 5, // target the sixth column (subscription_time)
                     "data": "subscription_time"
                 },
                 {
-                    "mRender": function(data, type, row) {
-                        var url = "{{ route('admin.subscribers.edit', 'id') }}";
-                        url = url.replace('id', row['id']);
+                    "targets": 6, // target the seventh column (action buttons)
+                    "data": null,
+                    "render": function(data, type, row) {
+                        let url = "{{ route('admin.subscribers.edit', 'id') }}";
+                        let id = (row['id']).replace(/"/g, '');
+                        url = url.replace('id', id);
                         return '<a class="btn btn-primary"  href=' + url +
                             '><i class="fa fa-edit"></i></a> <a style="color:#fff" class="btn btn-danger delete" data-content="' +
-                            row['id'] + '"><i class="fa fa-trash"></i></a>';
+                            id + '"><i class="fa fa-trash"></i></a>';
                     },
-                    sortable: false,
-                    searchable: false,
+                    "sortable": false,
+                    "searchable": false,
                 },
-            ]
-        }).ajax.reload();
+            ],
+        });
 
-        // Delete subscriber data
-        var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+        // delete subscriber data
+        let CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
 
         $("#subscribers").on('click', '.delete', function() {
-            var content = $(this).data("content");
-            var urls = "{{ route('admin.subscribers.destroy', 'id') }}";
-            urls = urls.replace('id', content);
+            let content = $(this).data("content");
+            let delete_url = "{{ route('admin.subscribers.destroy', 'id') }}";
+            delete_url = delete_url.replace('id', content);
             $.ajax({
-                url: urls,
+                url: delete_url,
                 method: 'POST',
                 data: {
                     _token: CSRF_TOKEN,
@@ -104,8 +112,10 @@
                     });
                 },
                 error: function(response) {
-                    var errorObj = JSON.parse(response.responseText);
-                    var error = errorObj.error;
+                    let errorObj = JSON.parse(response.responseText);
+                    let error = errorObj.error;
+                    // let id = errorObj.id;
+                    // console.log('returned id=' + id);
                     swal({
                         title: "Error",
                         text: error,

@@ -31,20 +31,7 @@ class SubscriberController extends Controller
                 'message' => 'API key is invalid!',
             ];
             return view('admin.pages.subscribers.index', $data);
-        }
-
-        // $result = $this->subscriber->listSubscribers();
-        // if ($result['success'] === true) {$subscribers = $result['data']['subscribers'];
-        //     /**return Datatables::of($records)->make(true);
-        //      */
-        //     $data = [
-        //         'title' => 'Subscribers',
-        //         'subscribers' => $subscribers,
-        //         'message' => null,
-        //     ];
-        //     return view('admin.pages.subscribers.index', $data);
-        // }
-        else {
+        } else {
             $data = [
                 'title' => 'Subscribers',
                 'subscribers' => [],

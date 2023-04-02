@@ -78,7 +78,9 @@ class MailerLiteSubscriberAdapter implements Subscriber
         $subscribers_formatted = [];
         $subscribers_count = count($subscribers);
         for ($i = 0; $i < $subscribers_count; $i++) {
-            $subscribers_formatted[$i]['id'] = $subscribers[$i]->id;
+            // show id as a string to ensure that they will be shown correctly when using DataTables,
+            // as some of them is larger than the max numeric values in JavaScript
+            $subscribers_formatted[$i]['id'] = (string) $subscribers[$i]->id;
             $subscribers_formatted[$i]['email'] = $subscribers[$i]->email;
             $subscribers_formatted[$i]['name'] = $subscribers[$i]->name;
             $subscribers_formatted[$i]['country'] =
@@ -167,11 +169,6 @@ class MailerLiteSubscriberAdapter implements Subscriber
                 'success' => true,
                 'error_message' => null,
                 'data' => null,
-            ];
-
-            return ['success' => true,
-                'data' => null,
-                'error_message' => "",
             ];
         } catch (ClientException $e) {
             $error_message = $this->errorMessagesToView($e->getResponse());

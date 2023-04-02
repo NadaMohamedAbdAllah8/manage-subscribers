@@ -112,7 +112,6 @@ class SubscriberService
     // make a call to validate the api key
     private function makeRequestToCheckAPIKey($setting): bool
     {
-        //dd('will make a request to check api key');
         $client = new Client(['base_uri' => self::$base_uri]);
         try {
             $client->get('subscribers?limit=0', [
