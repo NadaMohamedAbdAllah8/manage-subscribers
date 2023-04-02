@@ -32,10 +32,8 @@ License: You must have a valid license purchased only from themeforest(the above
     <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.23/css/jquery.dataTables.min.css">
     <script src="//cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
     <link href="{{ asset('assets/css/pages_style.css') }}" rel="stylesheet" type="text/css" />
-
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
-    {{-- <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script> --}}
     @yield('styles')
 
 
