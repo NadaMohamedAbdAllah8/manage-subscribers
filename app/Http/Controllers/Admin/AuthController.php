@@ -6,13 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
     public function login(LoginRequest $request)
     {
-        DB::beginTransaction();
         try {
             // Login
             if (Auth::guard('admin')->attempt(['email' => request('email'),
@@ -22,10 +20,8 @@ class AuthController extends Controller
             } else {
                 return redirect()->route('admin.login')->with('error', 'Bad credentials');
             }
-            DB::commit();
         } catch (\Exception $e) {
-            DB::rollback();
-            return redirect()->route('admin.login')->with('error');
+            return redirect()->route('admin.login')->with('error', 'Error');
         }
     }
 
