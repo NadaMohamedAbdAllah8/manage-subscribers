@@ -94,6 +94,22 @@ class MailerLiteSubscriberAdapter implements Subscriber
         return $subscribers_formatted;
     }
 
+    private function formatSubscriberData($subscriber): array
+    {
+        // show id as a string to ensure that they will be shown correctly when using DataTables,
+        // as some of them is larger than the max numeric values in JavaScript
+        $subscriber_formatted['id'] = (string) $subscriber->id;
+        $subscriber_formatted['email'] = $subscriber->email;
+        $subscriber_formatted['name'] = $subscriber->name;
+        $subscriber_formatted['country'] =
+        $this->getCountry($subscriber->fields);
+        $subscriber_formatted['subscription_date'] =
+            date('d/m/Y', strtotime($subscriber->date_subscribe));
+        $subscriber_formatted['subscription_time'] =
+            date('H:i', strtotime($subscriber->date_subscribe));
+
+        return $subscriber_formatted;
+    }
     private function getCountry($fields): string
     {
         foreach ($fields as $field) {
@@ -122,6 +138,31 @@ class MailerLiteSubscriberAdapter implements Subscriber
                 'success' => true,
                 'error_message' => null,
                 'data' => null,
+            ];
+        } catch (ClientException $e) {
+            $error_message = $this->errorMessagesToView($e->getResponse());
+            return ['success' => false,
+                'error_message' => $error_message,
+                'data' => null,
+            ];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error_message' => $e->getMessage(), 'data' => null];
+        }
+    }
+
+    public function show($id): array
+    {
+        // call api to store
+        $client = new Client(['base_uri' => self::$base_uri]);
+        try {
+            $response = $client->get("subscribers/$id", [
+                'headers' => self::$headers,
+            ]);
+            $subscriber = $this->formatSubscriberData(json_decode($response->getBody()->getContents()));
+            return [
+                'success' => true,
+                'error_message' => null,
+                'data' => ['subscriber' => $subscriber],
             ];
         } catch (ClientException $e) {
             $error_message = $this->errorMessagesToView($e->getResponse());

@@ -89,11 +89,18 @@ class SubscriberController extends Controller
      */
     public function edit($id)
     {
-        $data = [
-            'title' => 'Edit Subscriber',
-            'id' => $id,
-        ];
-        return view('admin.pages.subscribers.edit', $data);
+        $result = $this->subscriber->show($id);
+        if ($result['success'] == false) {
+            return redirect(route('admin.subscribers.index'))
+                ->with('error', $result['error_message']);
+        } else {
+            $data = [
+                'title' => 'Edit Subscriber',
+                'id' => $id,
+                'subscriber' => $result['data']['subscriber'],
+            ];
+            return view('admin.pages.subscribers.edit', $data);
+        }
     }
 
     /**

@@ -16,11 +16,31 @@
                 <div class="form-group m-form__group row">
                     <div class="col-lg-6">
                         <label for="username"><b>Subscriber Name</b></label>
-                        <input type="text" placeholder="Enter Subscriber Name" name="name" required>
+                        <input type="text" placeholder="Enter Subscriber Name" name="name" required
+                            value="{{ $subscriber['name'] }}">
                     </div>
                     <div class="col-lg-6">
                         <label for="username"><b>Subscriber Country</b></label>
-                        <input type="text" placeholder="Enter Subscriber Country" name="country" required>
+                        <input type="text" placeholder="Enter Subscriber Country" name="country" required
+                            value="{{ $subscriber['country'] }}">
+                    </div>
+                </div>
+
+                <div class="form-group m-form__group row">
+                    <div class="col-lg-6">
+                        <label for="username"><b>Subscriber email</b></label>
+                        <input type="text" class="read-only-input" value="{{ $subscriber['email'] }}">
+                    </div>
+                </div>
+
+                <div class="form-group m-form__group row">
+                    <div class="col-lg-6">
+                        <label for="username"><b>Subscription date</b></label>
+                        <input type="text" class="read-only-input" value="{{ $subscriber['subscription_date'] }}">
+                    </div>
+                    <div class="col-lg-6">
+                        <label for="username"><b>Subscription time</b></label>
+                        <input type="text" class="read-only-input" value="{{ $subscriber['subscription_time'] }}">
                     </div>
                 </div>
 
