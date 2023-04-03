@@ -4,7 +4,7 @@
 @endsection
 
 @section('content')
-    <div class="formdiv">
+    <div class="formdiv login-form">
         <form action="{{ route('admin.login-post') }}" method="POST">
             @csrf
             <h1>Login</h1>
@@ -17,7 +17,7 @@
             <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="password" id="psw" required>
 
-            <button type="submit" class="actionbtn primary">Sign in</button>
+            <button type="submit" class="btn btn-primary actionbtn">Sign in</button>
         </form>
     </div>
 @endsection
