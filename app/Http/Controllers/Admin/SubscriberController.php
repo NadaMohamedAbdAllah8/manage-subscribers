@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Subscriber\StoreRequest;
 use App\Services\Subscriber;
-// use \Debugbar;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
 
