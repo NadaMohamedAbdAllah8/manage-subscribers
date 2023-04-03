@@ -15,7 +15,6 @@ class AdminSeeder extends Seeder
     public function run()
     {
         if (Admin::count('id') == 0) {
-
             Admin::create([
                 'name' => 'admin',
                 'email' => 'admin@admin.com',
