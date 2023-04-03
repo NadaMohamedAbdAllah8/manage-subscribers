@@ -6,6 +6,13 @@ use Illuminate\Http\Request;
 
 interface Subscriber
 {
+    /**used array format is:
+     * [
+     * 'success'=>true/false,
+     * 'data=>[],
+     * 'error_message'=>""
+     * ]
+     */
     public function store($request): array;
     public function validateAPIKey(): bool;
     public function listSubscribers(): array;

@@ -58,17 +58,22 @@ class MailerLiteSubscriberAdapter implements Subscriber
                 'headers' => self::$headers,
             ]);
             $subscribers = $this->formatSubscribersData(json_decode($response->getBody()->getContents()));
-            return ['success' => true, 'data' => null,
-                'data' => ['subscribers' => $subscribers], 'error_message' => null];
+            return [
+                'success' => true,
+                'data' => ['subscribers' => $subscribers],
+                'error_message' => null,
+            ];
         } catch (ClientException $e) {
             $error_message = $this->errorMessagesToView($e->getResponse());
-            return ['success' => false,
+            return [
+                'success' => false,
                 'data' => null,
                 'error_message' => $error_message,
             ];
         } catch (\Exception $e) {
-            return ['success' => false,
-                'subscribers' => [],
+            return [
+                'success' => false,
+                'data' => [],
                 'error_message' => $e->getMessage(),
             ];
         }
@@ -136,17 +141,22 @@ class MailerLiteSubscriberAdapter implements Subscriber
             ]);
             return [
                 'success' => true,
-                'error_message' => null,
                 'data' => null,
+                'error_message' => null,
             ];
         } catch (ClientException $e) {
             $error_message = $this->errorMessagesToView($e->getResponse());
-            return ['success' => false,
-                'error_message' => $error_message,
+            return [
+                'success' => false,
                 'data' => null,
+                'error_message' => $error_message,
             ];
         } catch (\Exception $e) {
-            return ['success' => false, 'error_message' => $e->getMessage(), 'data' => null];
+            return [
+                'success' => false,
+                'data' => null,
+                'error_message' => $e->getMessage(),
+            ];
         }
     }
 
@@ -161,17 +171,22 @@ class MailerLiteSubscriberAdapter implements Subscriber
             $subscriber = $this->formatSubscriberData(json_decode($response->getBody()->getContents()));
             return [
                 'success' => true,
-                'error_message' => null,
                 'data' => ['subscriber' => $subscriber],
+                'error_message' => null,
             ];
         } catch (ClientException $e) {
             $error_message = $this->errorMessagesToView($e->getResponse());
-            return ['success' => false,
-                'error_message' => $error_message,
+            return [
+                'success' => false,
                 'data' => null,
+                'error_message' => $error_message,
             ];
         } catch (\Exception $e) {
-            return ['success' => false, 'error_message' => $e->getMessage(), 'data' => null];
+            return [
+                'success' => false,
+                'data' => null,
+                'error_message' => $e->getMessage(),
+            ];
         }
     }
 
@@ -195,12 +210,16 @@ class MailerLiteSubscriberAdapter implements Subscriber
             ];
         } catch (ClientException $e) {
             $error_message = $this->errorMessagesToView($e->getResponse());
-            return ['success' => false,
-                'error_message' => $error_message,
+            return [
+                'success' => false,
                 'data' => null,
+                'error_message' => $error_message,
             ];
         } catch (\Exception $e) {
-            return ['success' => false, 'error_message' => $e->getMessage(), 'data' => null];
+            return [
+                'success' => false,
+                'data' => null,
+                'error_message' => $e->getMessage()];
         }
     }
 
@@ -238,18 +257,20 @@ class MailerLiteSubscriberAdapter implements Subscriber
             ]);
             return [
                 'success' => true,
-                'error_message' => null,
                 'data' => null,
+                'error_message' => null,
             ];
         } catch (ClientException $e) {
             $error_message = $this->errorMessagesToView($e->getResponse());
-            return ['success' => false,
+            return [
+                'success' => false,
                 'data' => null,
                 'error_message' => $error_message,
             ];
         } catch (\Exception $e) {
-            return ['success' => false,
-                'subscribers' => [],
+            return [
+                'success' => false,
+                'data' => null,
                 'error_message' => $e->getMessage(),
             ];
         }
