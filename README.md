@@ -28,4 +28,4 @@ This project also uses DataTables to allow users to:
 
 1. Start the server by running `php artisan serve`.
 2. Go to http://127.0.0.1:8000/subscribers (using default host and port) to view the index of subscribers.
-3. To login as an admin user, go to http://127.0.0.1:8000/admin/login (using default host and port) and use `admin` as the username and `password` as the password.
+3. To login as an admin user, go to http://127.0.0.1:8000/login (using default host and port) and use `admin` as the username and `password` as the password.
