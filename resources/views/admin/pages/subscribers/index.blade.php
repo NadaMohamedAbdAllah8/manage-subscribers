@@ -49,7 +49,12 @@
                 },
                 {
                     "targets": 1, // target the second column (email)
-                    "data": "email"
+                    "render": function(data, type, row) {
+                        let url = "{{ route('admin.subscribers.edit', 'id') }}";
+                        let id = (row['id']).replace(/"/g, '');
+                        url = url.replace('id', id);
+                        return '<a  href=' + url + '>' + row['email'];
+                    }
                 },
                 {
                     "targets": 2, // target the third column (name)

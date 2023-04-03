@@ -6,6 +6,7 @@ use App\Models\Setting;
 use App\Services\Subscriber;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Http\Request;
 
 class MailerLiteSubscriberAdapter implements Subscriber
 {
@@ -114,6 +115,35 @@ class MailerLiteSubscriberAdapter implements Subscriber
                     'country' => $request->country],
             ];
             $response = $client->post('subscribers', [
+                'headers' => self::$headers,
+                'json' => $form_params,
+            ]);
+            return [
+                'success' => true,
+                'error_message' => null,
+                'data' => null,
+            ];
+        } catch (ClientException $e) {
+            $error_message = $this->errorMessagesToView($e->getResponse());
+            return ['success' => false,
+                'error_message' => $error_message,
+                'data' => null,
+            ];
+        } catch (\Exception $e) {
+            return ['success' => false, 'error_message' => $e->getMessage(), 'data' => null];
+        }
+    }
+
+    public function update($id, Request $request): array
+    {
+        // call api to store
+        $client = new Client(['base_uri' => self::$base_uri]);
+        try {
+            $form_params = [
+                'fields' => ['name' => $request->name,
+                    'country' => $request->country],
+            ];
+            $response = $client->put("subscribers/$id", [
                 'headers' => self::$headers,
                 'json' => $form_params,
             ]);

@@ -77,7 +77,7 @@ class SubscriberController extends Controller
                 ->with('error', $result['error_message']);
         } else {
             return redirect(route('admin.subscribers.index'))
-                ->with('success', 'Subscriber Created');
+                ->with('success', 'Subscriber Updated');
         }
     }
 
@@ -89,10 +89,9 @@ class SubscriberController extends Controller
      */
     public function edit($id)
     {
-        // fetch a subscriber GET https://connect.mailerlite.com/api/subscribers/(:id or :email)
         $data = [
-            'title' => 'Create Subscriber',
-            'subscriber' => $id,
+            'title' => 'Edit Subscriber',
+            'id' => $id,
         ];
         return view('admin.pages.subscribers.edit', $data);
     }
@@ -106,7 +105,14 @@ class SubscriberController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $result = $this->subscriber->update($id, $request);
+        if ($result['success'] == false) {
+            return redirect(route('admin.subscribers.index'))
+                ->with('error', $result['error_message']);
+        } else {
+            return redirect(route('admin.subscribers.index'))
+                ->with('success', 'Subscriber Created');
+        }
     }
 
     /**
