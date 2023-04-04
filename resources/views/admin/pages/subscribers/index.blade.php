@@ -43,6 +43,9 @@
             'paging': true,
             'info': true,
             "ajax": "{{ route('admin.subscribers.data') }}",
+            // "language": {
+            //     "emptyTable": "No data available in table. Check back later"
+            // },
             "columnDefs": [{
                     "targets": 0, // target the first column (id)
                     "data": "id",
