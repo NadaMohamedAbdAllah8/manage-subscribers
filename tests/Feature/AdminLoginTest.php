@@ -16,7 +16,13 @@ class AdminLoginTest extends TestCase
         $response = $this->get('/login');
 
         $response->assertStatus(200);
-        // $response->assertViewIs('auth.login');
+    }
+
+    public function test_redirect_to_login_page_when_not_authenticated()
+    {
+        $response = $this->get('/subscribers');
+
+        $response->assertRedirect('/login');
     }
 
     public function test_an_admin_can_login()
@@ -43,16 +49,6 @@ class AdminLoginTest extends TestCase
 
         // the email does not exist in the admins table
         $response->assertSessionHasErrors(['email']);
-
-        //  $this->assertEquals('Bad credentials', session('error'));
-
-        // $this->assertEquals('Bad credentials', session('error'));
-        //$response->assertRedirect(route('admin.login'));
-        //
-
-        // $response->assertSessionHasErrors('email');
-        // $response->assertSessionHasErrors('password');
-        // $response->assertSessionHas('error', 'Error');
     }
 
     public function test_login_failed_with_wrong_password()
