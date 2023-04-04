@@ -26,7 +26,7 @@ This project also uses DataTables to allow users to:
 
 2. Create a `.env` file by copying the `.env.example` file and setting the database name and the `MAILER_LITE_API_KEY` variable value to use MailerLite services.
 
-3. Run the following two commands to migrate and seed the database:
+3. You can use the database export in \_SQL, or run the following two commands to migrate and seed the database:
 
 -   `php artisan migrate`
 
