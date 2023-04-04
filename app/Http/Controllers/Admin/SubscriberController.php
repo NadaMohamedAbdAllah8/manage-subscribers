@@ -44,10 +44,13 @@ class SubscriberController extends Controller
     {
         $subscribers = [];
         $result = $this->subscriber->listSubscribers();
+        // dd($result);
         if ($result['success'] === true) {
             $subscribers = $result['data']['subscribers'];
+            return Datatables::of($subscribers)->make(true);
+
         }
-        return Datatables::of($subscribers)->make(true);
+        return json_encode(['error' => $result['error_message']]);
     }
 
     /**
@@ -133,7 +136,7 @@ class SubscriberController extends Controller
         try {
             $result = $this->subscriber->delete($id);
             if ($result['success']) {
-                return response()->json([], 200);
+                return response()->json([], 204);
             } else {
                 //return $result['error_message'];
                 return response()->json(['error' => $result['error_message'], 'id' => $id], 500)
