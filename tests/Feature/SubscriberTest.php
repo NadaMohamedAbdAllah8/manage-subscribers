@@ -39,8 +39,7 @@ class SubscriberTest extends TestCase
 
     public function test_create_a_subscriber_validation()
     {
-        $response = $this->actingAs($this->admin, 'admin')->post(
-            '/subscribers',
+        $response = $this->actingAs($this->admin, 'admin')->post('/subscribers',
             [
                 'email' => 'email',
                 'name' => '',
@@ -55,26 +54,19 @@ class SubscriberTest extends TestCase
     public function test_create_a_subscriber_successfully()
     {
         $response = $this->actingAs($this->admin, 'admin')->get('/subscribers/create');
-
         $response->assertStatus(200);
 
         // save subscriber
-        $response = $this->actingAs($this->admin, 'admin')->post(
-            '/subscribers',
-            $this->getTestSubscriberData()
-        );
+        $response = $this->actingAs($this->admin, 'admin')->post('/subscribers',
+            $this->getTestSubscriberData());
 
         // redirecting to subscribers index
         $response->assertStatus(302);
         $response->assertRedirect('/subscribers');
 
         // subscriber is returned in the data
-        $this->actingAs($this->admin, 'admin')->post(
-            '/subscribers',
-            $this->getTestSubscriberData()
-        );
-
         $subscriber_data = $this->getLatestSubscriberData();
+        $this->setId($subscriber_data['id']);
 
         $this->assertEquals($this->email, $subscriber_data['email']);
         $this->assertEquals($this->name, $subscriber_data['name']);
@@ -86,10 +78,8 @@ class SubscriberTest extends TestCase
     public function test_edit_page_contains_subscriber_values()
     {
         // create a subscriber
-        $this->actingAs($this->admin, 'admin')->post(
-            '/subscribers',
-            $this->getTestSubscriberData()
-        );
+        $this->actingAs($this->admin, 'admin')->post('/subscribers',
+            $this->getTestSubscriberData());
         $subscriber_data = $this->getLatestSubscriberData();
         $this->setId($subscriber_data['id']);
         $this->setSubscriptionDate($subscriber_data['subscription_date']);
@@ -130,10 +120,8 @@ class SubscriberTest extends TestCase
     public function test_update_a_subscriber_successfully()
     {
         // create a subscriber
-        $this->actingAs($this->admin, 'admin')->post(
-            '/subscribers',
-            $this->getTestSubscriberData()
-        );
+        $this->actingAs($this->admin, 'admin')->post('/subscribers',
+            $this->getTestSubscriberData());
         $subscriber_data = $this->getLatestSubscriberData();
         $this->setId($subscriber_data['id']);
         $this->setSubscriptionDate($subscriber_data['subscription_date']);
@@ -142,10 +130,11 @@ class SubscriberTest extends TestCase
         $name_updated = 'name test update';
         $country_updated = 'country test update';
 
-        $response = $this->actingAs($this->admin, 'admin')->put(
-            '/subscribers/' . $this->id,
-            ['name' => $name_updated,
-                'country' => $country_updated]
+        $response = $this->actingAs($this->admin, 'admin')->put('/subscribers/' . $this->id,
+            [
+                'name' => $name_updated,
+                'country' => $country_updated,
+            ]
         );
 
         $response->assertStatus(302);
@@ -161,10 +150,8 @@ class SubscriberTest extends TestCase
     public function test_delete_a_subscriber_successfully()
     {
         // create a subscriber
-        $this->actingAs($this->admin, 'admin')->post(
-            '/subscribers',
-            $this->getTestSubscriberData()
-        );
+        $this->actingAs($this->admin, 'admin')->post('/subscribers',
+            $this->getTestSubscriberData());
         $subscriber_data = $this->getLatestSubscriberData();
         $this->setId($subscriber_data['id']);
         $this->setSubscriptionDate($subscriber_data['subscription_date']);
