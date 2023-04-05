@@ -48,7 +48,6 @@ class SubscriberController extends Controller
         if ($result['success'] === true) {
             $subscribers = $result['data']['subscribers'];
             return Datatables::of($subscribers)->make(true);
-
         }
         return json_encode(['error' => $result['error_message']]);
     }

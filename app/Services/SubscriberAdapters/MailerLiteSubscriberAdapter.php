@@ -25,15 +25,6 @@ class MailerLiteSubscriberAdapter implements Subscriber
         }
     }
 
-    private function setHeader($mailer_lite_api_key): void
-    {
-        self::$api_key = $mailer_lite_api_key;
-        self::$headers = [
-            'Content-Type' => 'application/json',
-            'X-MailerLite-ApiKey' => self::$api_key,
-        ];
-    }
-
     public function validateAPIKey(): bool
     {
         if (!is_null(self::$api_key)) {
@@ -77,52 +68,6 @@ class MailerLiteSubscriberAdapter implements Subscriber
                 'error_message' => $e->getMessage(),
             ];
         }
-    }
-
-    private function formatSubscribersData($subscribers): array
-    {
-        $subscribers_formatted = [];
-        $subscribers_count = count($subscribers);
-        for ($i = 0; $i < $subscribers_count; $i++) {
-            // show id as a string to ensure that they will be shown correctly when using DataTables,
-            // as some of them is larger than the max numeric values in JavaScript
-            $subscribers_formatted[$i]['id'] = (string) $subscribers[$i]->id;
-            $subscribers_formatted[$i]['email'] = $subscribers[$i]->email;
-            $subscribers_formatted[$i]['name'] = $subscribers[$i]->name;
-            $subscribers_formatted[$i]['country'] =
-            $this->getCountry($subscribers[$i]->fields);
-            $subscribers_formatted[$i]['subscription_date'] =
-                date('d/m/Y', strtotime($subscribers[$i]->date_subscribe));
-            $subscribers_formatted[$i]['subscription_time'] =
-                date('H:i', strtotime($subscribers[$i]->date_subscribe));
-        }
-        return $subscribers_formatted;
-    }
-
-    private function formatSubscriberData($subscriber): array
-    {
-        // show id as a string to ensure that they will be shown correctly when using DataTables,
-        // as some of them is larger than the max numeric values in JavaScript
-        $subscriber_formatted['id'] = (string) $subscriber->id;
-        $subscriber_formatted['email'] = $subscriber->email;
-        $subscriber_formatted['name'] = $subscriber->name;
-        $subscriber_formatted['country'] =
-        $this->getCountry($subscriber->fields);
-        $subscriber_formatted['subscription_date'] =
-            date('d/m/Y', strtotime($subscriber->date_subscribe));
-        $subscriber_formatted['subscription_time'] =
-            date('H:i', strtotime($subscriber->date_subscribe));
-
-        return $subscriber_formatted;
-    }
-    private function getCountry($fields): string
-    {
-        foreach ($fields as $field) {
-            if ($field->key === 'country') {
-                return $field->value;
-            }
-        }
-        return null;
     }
 
     public function store($request): array
@@ -223,30 +168,6 @@ class MailerLiteSubscriberAdapter implements Subscriber
         }
     }
 
-    private function storeAPIKey(): Setting
-    {
-        return Setting::create([
-            'mailer_lite_api_key' => config('mailer_lite.api_key'),
-        ]);
-    }
-
-    // make a call to validate the api key
-    private function makeRequestToCheckAPIKey($setting): bool
-    {
-        $client = new Client(['base_uri' => self::$base_uri]);
-        try {
-            $client->get('subscribers?limit=0', [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'X-MailerLite-ApiKey' => $setting->mailer_lite_api_key,
-                ],
-            ]);
-            return true;
-        } catch (\Exception $e) {
-            return false;
-        }
-    }
-
     public function delete($id): array
     {
         // call api to store
@@ -274,6 +195,87 @@ class MailerLiteSubscriberAdapter implements Subscriber
                 'error_message' => $e->getMessage(),
             ];
         }
+    }
+
+    // private functions
+    private function setHeader($mailer_lite_api_key): void
+    {
+        self::$api_key = $mailer_lite_api_key;
+        self::$headers = [
+            'Content-Type' => 'application/json',
+            'X-MailerLite-ApiKey' => self::$api_key,
+        ];
+    }
+
+    private function storeAPIKey(): Setting
+    {
+        return Setting::create([
+            'mailer_lite_api_key' => config('mailer_lite.api_key'),
+        ]);
+    }
+
+    // make a call to validate the api key
+    private function makeRequestToCheckAPIKey($setting): bool
+    {
+        $client = new Client(['base_uri' => self::$base_uri]);
+        try {
+            $client->get('subscribers?limit=0', [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'X-MailerLite-ApiKey' => $setting->mailer_lite_api_key,
+                ],
+            ]);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    private function formatSubscribersData($subscribers): array
+    {
+        $subscribers_formatted = [];
+        $subscribers_count = count($subscribers);
+        for ($i = 0; $i < $subscribers_count; $i++) {
+            // show id as a string to ensure that they will be shown correctly when using DataTables,
+            // as some of them is larger than the max numeric values in JavaScript
+            $subscribers_formatted[$i]['id'] = (string) $subscribers[$i]->id;
+            $subscribers_formatted[$i]['email'] = $subscribers[$i]->email;
+            $subscribers_formatted[$i]['name'] = $subscribers[$i]->name;
+            $subscribers_formatted[$i]['country'] =
+            $this->getCountry($subscribers[$i]->fields);
+            $subscribers_formatted[$i]['subscription_date'] =
+                date('d/m/Y', strtotime($subscribers[$i]->date_subscribe));
+            $subscribers_formatted[$i]['subscription_time'] =
+                date('H:i', strtotime($subscribers[$i]->date_subscribe));
+        }
+        return $subscribers_formatted;
+    }
+
+    private function formatSubscriberData($subscriber): array
+    {
+        // show id as a string to ensure that they will be shown correctly when using DataTables,
+        // as some of them is larger than the max numeric values in JavaScript
+        $subscriber_formatted['id'] = (string) $subscriber->id;
+        $subscriber_formatted['email'] = $subscriber->email;
+        $subscriber_formatted['name'] = $subscriber->name;
+        $subscriber_formatted['country'] =
+        $this->getCountry($subscriber->fields);
+        $subscriber_formatted['subscription_date'] =
+            date('d/m/Y', strtotime($subscriber->date_subscribe));
+        $subscriber_formatted['subscription_time'] =
+            date('H:i', strtotime($subscriber->date_subscribe));
+
+        return $subscriber_formatted;
+    }
+
+    private function getCountry($fields): string
+    {
+        foreach ($fields as $field) {
+            if ($field->key === 'country') {
+                return $field->value;
+            }
+        }
+        return null;
     }
 
     private function errorMessagesToView($response): string
