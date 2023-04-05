@@ -37,15 +37,12 @@ class SubscriberTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_create_page_opens_for_admin()
+    public function test_create_a_subscriber_successfully()
     {
         $response = $this->actingAs($this->admin, 'admin')->get('/subscribers/create');
 
         $response->assertStatus(200);
-    }
 
-    public function test_create_a_subscriber_successfully()
-    {
         // save subscriber
         $response = $this->actingAs($this->admin, 'admin')->post('/subscribers',
             $this->getTestSubscriberData());
