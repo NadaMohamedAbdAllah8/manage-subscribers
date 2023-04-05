@@ -65,7 +65,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
             return [
                 'success' => false,
                 'data' => [],
-                'error_message' => $e->getMessage(),
+                'error_message' => 'Error',
             ];
         }
     }
@@ -100,7 +100,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
             return [
                 'success' => false,
                 'data' => null,
-                'error_message' => $e->getMessage(),
+                'error_message' => 'Error',
             ];
         }
     }
@@ -130,7 +130,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
             return [
                 'success' => false,
                 'data' => null,
-                'error_message' => $e->getMessage(),
+                'error_message' => 'Error',
             ];
         }
     }
@@ -164,7 +164,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
             return [
                 'success' => false,
                 'data' => null,
-                'error_message' => $e->getMessage()];
+                'error_message' => 'Error'];
         }
     }
 
@@ -192,7 +192,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
             return [
                 'success' => false,
                 'data' => null,
-                'error_message' => $e->getMessage(),
+                'error_message' => 'Error',
             ];
         }
     }
