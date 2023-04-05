@@ -22,6 +22,10 @@ class MailerLiteSubscriberAdapter implements Subscriber
         // check: the api key in the database
         if (!is_null($setting) && !is_null($setting->mailer_lite_api_key)) {
             $this->setHeader($setting->mailer_lite_api_key);
+        } else {
+            // insert the api key in the database
+            $setting = $this->storeAPIKey();
+            $this->setHeader($setting->mailer_lite_api_key);
         }
     }
 
