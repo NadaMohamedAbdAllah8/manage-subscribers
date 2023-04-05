@@ -99,6 +99,7 @@ class SubscriberTest extends TestCase
         $response->assertStatus(200);
 
         // values are correct
+        $response->assertSee('value="' . $this->email . '"', false);
         $response->assertSee('value="' . $this->name . '"', false);
         $response->assertSee('value="' . $this->country . '"', false);
         $response->assertSee('value="' . $this->subscription_date . '"', false);
