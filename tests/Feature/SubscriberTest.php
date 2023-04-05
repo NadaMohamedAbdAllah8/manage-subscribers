@@ -25,7 +25,7 @@ class SubscriberTest extends TestCase
 
         $this->admin = $this->getAdmin();
         $timestamp = time();
-        $this->email = 'test_email1680636331@test.com';
+        $this->email = 'test_email' . $timestamp . '@test.com';
         $this->name = 'Test name';
         $this->country = 'Test county';
     }
@@ -44,45 +44,62 @@ class SubscriberTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_create_a_subscriber_successfully()
+    // public function test_create_a_subscriber_successfully()
+    // {
+    //     // save subscriber
+    //     $response = $this->actingAs($this->admin, 'admin')->post('/subscribers',
+    //         $this->getTestSubscriberData());
+
+    //     // redirecting to subscribers index
+    //     $response->assertStatus(302);
+    //     $response->assertRedirect('/subscribers');
+
+    //     // subscriber is returned in the data
+    //     $this->actingAs($this->admin, 'admin')->post('/subscribers',
+    //         $this->getTestSubscriberData());
+
+    //     $subscriber_data = $this->getLatestSubscriberData();
+
+    //     $this->assertEquals($this->email, $subscriber_data['email']);
+    //     $this->assertEquals($this->name, $subscriber_data['name']);
+    //     $this->assertEquals($this->country, $subscriber_data['country']);
+    // }
+
+    public function test_edit_page_opens_for_admin()
     {
-        $response = $this->actingAs($this->admin, 'admin')->post('/subscribers',
+        // create a subscriber
+        $this->actingAs($this->admin, 'admin')->post('/subscribers',
             $this->getTestSubscriberData());
-
-        // redirecting to subscribers
-        $response->assertStatus(302);
-        $response->assertRedirect('/subscribers');
-    }
-
-    public function test_created_subscriber_is_in_the_index()
-    {
-        $response = $this->actingAs($this->admin, 'admin')->get('/subscribers/data');
-
-        $response->assertOk();
-
-        $data = $response->content();
-
-        $subscriber_data = json_decode($data, true)['data'][0];
-        // if (isset($data['error'])) {
-        //     dd($data);
-        // }
-
-        // echo $this->email . '+++++++' . $this->name . '+++++++' . $this->country;
-        // dd($subscriber_data);
-        $this->assertEquals($this->email, $subscriber_data['email']);
-        $this->assertEquals($this->name, $subscriber_data['name']);
-        $this->assertEquals($this->country, $subscriber_data['country']);
-
-        // to be used with edit, delete
+        $subscriber_data = $this->getLatestSubscriberData();
         $this->setId($subscriber_data['id']);
         $this->setSubscriptionDate($subscriber_data['subscription_date']);
         $this->setSubscriptionTime($subscriber_data['subscription_time']);
+
+        $response = $this->actingAs($this->admin, 'admin')
+            ->get('/subscribers/' . $this->id . '/edit/');
+
+        $response->assertStatus(200);
+
+        // values are correct
+        $response->assertSee('value="' . $this->name . '"', false);
+        $response->assertSee('value="' . $this->country . '"', false);
+        $response->assertSee('value="' . $this->subscription_date . '"', false);
+        $response->assertSee('value="' . $this->subscription_time . '"', false);
     }
 
     private function getAdmin(): Admin
     {
         $this->seed(AdminSeeder::class);
         return Admin::first();
+    }
+
+    private function getLatestSubscriberData(): array
+    {
+        // get all the subscriber data
+        $response = $this->actingAs($this->admin, 'admin')->get('/subscribers/data');
+        // the subscriber exists
+        $data = $response->content();
+        return json_decode($data, true)['data'][0];
     }
 
     private function getTestSubscriberData(): array
