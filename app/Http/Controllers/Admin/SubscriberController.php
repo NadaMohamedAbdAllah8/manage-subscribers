@@ -79,7 +79,7 @@ class SubscriberController extends Controller
                 ->with('error', $result['error_message']);
         } else {
             return redirect(route('admin.subscribers.index'))
-                ->with('success', 'Subscriber Updated');
+                ->with('success', 'Subscriber Created');
         }
     }
 
@@ -120,7 +120,7 @@ class SubscriberController extends Controller
                 ->with('error', $result['error_message']);
         } else {
             return redirect(route('admin.subscribers.index'))
-                ->with('success', 'Subscriber Created');
+                ->with('success', 'Subscriber Updated');
         }
     }
 
