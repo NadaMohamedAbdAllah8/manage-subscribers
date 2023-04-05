@@ -43,7 +43,7 @@ CREATE TABLE `admins` (
 --
 
 INSERT INTO `admins` (`id`, `name`, `email`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(2, 'admin', 'admin@admin.com', '$2y$10$TaDHhrZYLL6l7tGk598d2.X9znKhbs84BVBdTOxecnnw0Br1/UmZq', NULL, '2023-04-01 12:21:47', '2023-04-01 12:21:47');
+(1, 'admin', 'admin@admin.com', '$2y$10$TaDHhrZYLL6l7tGk598d2.X9znKhbs84BVBdTOxecnnw0Br1/UmZq', NULL, '2023-04-01 12:21:47', '2023-04-01 12:21:47');
 
 -- --------------------------------------------------------
 
@@ -63,7 +63,7 @@ CREATE TABLE `settings` (
 --
 
 INSERT INTO `settings` (`id`, `mailer_lite_api_key`, `created_at`, `updated_at`) VALUES
-(12, NULL, '2023-04-01 12:21:53', '2023-04-01 12:21:53');
+(1, NULL, '2023-04-01 12:21:53', '2023-04-01 12:21:53');
 
 --
 -- Indexes for dumped tables
@@ -90,13 +90,13 @@ ALTER TABLE `settings`
 -- AUTO_INCREMENT for table `admins`
 --
 ALTER TABLE `admins`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `settings`
 --
 ALTER TABLE `settings`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
