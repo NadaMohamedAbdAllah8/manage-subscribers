@@ -16,7 +16,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
 
     public function __construct()
     {
-        self::$base_uri = 'https://api.mailerlite.com/api/v2/';
+        self::$base_uri = 'https://connect.mailerlite.com/api/';
 
         $setting = Setting::first();
         // check: the api key in the database
@@ -48,7 +48,8 @@ class MailerLiteSubscriberAdapter implements Subscriber
             $response = $client->get('subscribers', [
                 'headers' => self::$headers,
             ]);
-            $subscribers = $this->formatSubscribersData(json_decode($response->getBody()->getContents()));
+            $subscribers = $this->formatSubscribersData(
+                json_decode($response->getBody()->getContents())->data);
             return [
                 'success' => true,
                 'data' => ['subscribers' => $subscribers],
@@ -113,7 +114,8 @@ class MailerLiteSubscriberAdapter implements Subscriber
             $response = $client->get("subscribers/$id", [
                 'headers' => self::$headers,
             ]);
-            $subscriber = $this->formatSubscriberData(json_decode($response->getBody()->getContents()));
+            $subscriber =
+            $this->formatSubscriberData(json_decode($response->getBody()->getContents())->data);
             return [
                 'success' => true,
                 'data' => ['subscriber' => $subscriber],
@@ -203,7 +205,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
         self::$api_key = $mailer_lite_api_key;
         self::$headers = [
             'Content-Type' => 'application/json',
-            'X-MailerLite-ApiKey' => self::$api_key,
+            'Authorization' => 'Bearer ' . self::$api_key,
         ];
     }
 
@@ -240,13 +242,12 @@ class MailerLiteSubscriberAdapter implements Subscriber
             // as some of them is larger than the max numeric values in JavaScript
             $subscribers_formatted[$i]['id'] = (string) $subscribers[$i]->id;
             $subscribers_formatted[$i]['email'] = $subscribers[$i]->email;
-            $subscribers_formatted[$i]['name'] = $subscribers[$i]->name;
-            $subscribers_formatted[$i]['country'] =
-            $this->getCountry($subscribers[$i]->fields);
+            $subscribers_formatted[$i]['name'] = $subscribers[$i]->fields->name;
+            $subscribers_formatted[$i]['country'] = $subscribers[$i]->fields->country;
             $subscribers_formatted[$i]['subscription_date'] =
-                date('d/m/Y', strtotime($subscribers[$i]->date_subscribe));
+                date('d/m/Y', strtotime($subscribers[$i]->subscribed_at));
             $subscribers_formatted[$i]['subscription_time'] =
-                date('H:i', strtotime($subscribers[$i]->date_subscribe));
+                date('H:i', strtotime($subscribers[$i]->subscribed_at));
         }
         return $subscribers_formatted;
     }
@@ -257,25 +258,13 @@ class MailerLiteSubscriberAdapter implements Subscriber
         // as some of them is larger than the max numeric values in JavaScript
         $subscriber_formatted['id'] = (string) $subscriber->id;
         $subscriber_formatted['email'] = $subscriber->email;
-        $subscriber_formatted['name'] = $subscriber->name;
-        $subscriber_formatted['country'] =
-        $this->getCountry($subscriber->fields);
+        $subscriber_formatted['name'] = $subscriber->fields->name;
+        $subscriber_formatted['country'] = $subscriber->fields->country;
         $subscriber_formatted['subscription_date'] =
-            date('d/m/Y', strtotime($subscriber->date_subscribe));
+            date('d/m/Y', strtotime($subscriber->subscribed_at));
         $subscriber_formatted['subscription_time'] =
-            date('H:i', strtotime($subscriber->date_subscribe));
-
+            date('H:i', strtotime($subscriber->subscribed_at));
         return $subscriber_formatted;
-    }
-
-    private function getCountry($fields): string
-    {
-        foreach ($fields as $field) {
-            if ($field->key === 'country') {
-                return $field->value;
-            }
-        }
-        return null;
     }
 
     private function errorMessagesToView($response): string
