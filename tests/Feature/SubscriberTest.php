@@ -79,6 +79,8 @@ class SubscriberTest extends TestCase
         $this->assertEquals($this->email, $subscriber_data['email']);
         $this->assertEquals($this->name, $subscriber_data['name']);
         $this->assertEquals($this->country, $subscriber_data['country']);
+
+        $this->deleteTestSubscriber($this->id);
     }
 
     public function test_edit_page_contains_subscriber_values()
@@ -104,6 +106,8 @@ class SubscriberTest extends TestCase
         $response->assertSee('value="' . $this->country . '"', false);
         $response->assertSee('value="' . $this->subscription_date . '"', false);
         $response->assertSee('value="' . $this->subscription_time . '"', false);
+
+        $this->deleteTestSubscriber($this->id);
     }
 
     public function test_update_a_subscriber_validation()
@@ -150,6 +154,8 @@ class SubscriberTest extends TestCase
         $updated_subscriber_data = $this->getLatestSubscriberData();
         $this->assertEquals($name_updated, $updated_subscriber_data['name']);
         $this->assertEquals($country_updated, $updated_subscriber_data['country']);
+
+        $this->deleteTestSubscriber($this->id);
     }
 
     public function test_delete_a_subscriber_successfully()
@@ -206,5 +212,10 @@ class SubscriberTest extends TestCase
     private function setSubscriptionTime($subscription_time): void
     {
         $this->subscription_time = $subscription_time;
+    }
+
+    private function deleteTestSubscriber($id)
+    {
+        $this->actingAs($this->admin, 'admin')->delete('/subscribers/' . $id);
     }
 }
