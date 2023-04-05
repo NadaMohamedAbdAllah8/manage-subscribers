@@ -1,6 +1,6 @@
 # Manage Subscribers Mini-Project
 
-This is a mini-project built with Laravel and MailerLite API for managing subscribers.
+This is a mini-project built with Laravel with MailerLite API for managing subscribers.
 
 ## Features
 
@@ -14,7 +14,7 @@ As an admin user, you can:
 
 -   Delete subscribers (note that there is no confirmation message for deletion)
 
-This project also uses DataTables to allow users to:
+This project uses DataTables to allow admins to:
 
 -   Search the subscriber data
 
