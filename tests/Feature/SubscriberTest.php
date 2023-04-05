@@ -37,6 +37,19 @@ class SubscriberTest extends TestCase
         $response->assertStatus(200);
     }
 
+    public function test_create_a_subscriber_validation()
+    {
+        $response = $this->actingAs($this->admin, 'admin')->post('/subscribers',
+            [
+                'email' => 'email',
+                'name' => '',
+                'country' => '1',
+            ]);
+
+        $response->assertStatus(302);
+        $response->assertInvalid(['email', 'name', 'country']);
+    }
+
     public function test_create_a_subscriber_successfully()
     {
         $response = $this->actingAs($this->admin, 'admin')->get('/subscribers/create');
@@ -62,7 +75,7 @@ class SubscriberTest extends TestCase
         $this->assertEquals($this->country, $subscriber_data['country']);
     }
 
-    public function test_edit_page_contains_subscriber()
+    public function test_edit_page_contains_subscriber_values()
     {
         // create a subscriber
         $this->actingAs($this->admin, 'admin')->post('/subscribers',
@@ -82,6 +95,61 @@ class SubscriberTest extends TestCase
         $response->assertSee('value="' . $this->country . '"', false);
         $response->assertSee('value="' . $this->subscription_date . '"', false);
         $response->assertSee('value="' . $this->subscription_time . '"', false);
+    }
+
+    public function test_update_a_subscriber_validation()
+    {
+        $response = $this->actingAs($this->admin, 'admin')->post('/subscribers',
+            [
+                'email' => 'email',
+                'name' => '',
+                'country' => '1',
+            ]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['email']);
+        $response->assertSessionHasErrors(['name']);
+        $response->assertSessionHasErrors(['country']);
+    }
+
+    public function test_update_a_subscriber_successfully()
+    {
+        // create a subscriber
+        $this->actingAs($this->admin, 'admin')->post('/subscribers',
+            $this->getTestSubscriberData());
+        $subscriber_data = $this->getLatestSubscriberData();
+        $this->setId($subscriber_data['id']);
+        $this->setSubscriptionDate($subscriber_data['subscription_date']);
+        $this->setSubscriptionTime($subscriber_data['subscription_time']);
+
+        $name_updated = 'name test update';
+        $country_updated = 'country test update';
+
+        $response = $this->actingAs($this->admin, 'admin')->put('/subscribers/' . $this->id,
+            ['name' => $name_updated,
+                'country' => $country_updated]);
+
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+
+        $updated_subscriber_data = $this->getLatestSubscriberData();
+        $this->assertEquals($name_updated, $updated_subscriber_data['name']);
+        $this->assertEquals($country_updated, $updated_subscriber_data['country']);
+    }
+
+    public function test_delete_a_subscriber_successfully()
+    {
+        // create a subscriber
+        $this->actingAs($this->admin, 'admin')->post('/subscribers',
+            $this->getTestSubscriberData());
+        $subscriber_data = $this->getLatestSubscriberData();
+        $this->setId($subscriber_data['id']);
+        $this->setSubscriptionDate($subscriber_data['subscription_date']);
+        $this->setSubscriptionTime($subscriber_data['subscription_time']);
+
+        $response = $this->actingAs($this->admin, 'admin')->delete('/subscribers/' . $this->id);
+
+        $response->assertStatus(204);
     }
 
     private function getAdmin(): Admin
