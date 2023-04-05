@@ -16,7 +16,7 @@ As an admin user, you can:
 
 This project uses DataTables to allow admins to:
 
--   Search the subscriber data
+-   Search the subscribers data
 
 -   Change the number of subscribers shown per page
 
