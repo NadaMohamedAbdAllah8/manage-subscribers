@@ -44,28 +44,28 @@ class SubscriberTest extends TestCase
         $response->assertStatus(200);
     }
 
-    // public function test_create_a_subscriber_successfully()
-    // {
-    //     // save subscriber
-    //     $response = $this->actingAs($this->admin, 'admin')->post('/subscribers',
-    //         $this->getTestSubscriberData());
+    public function test_create_a_subscriber_successfully()
+    {
+        // save subscriber
+        $response = $this->actingAs($this->admin, 'admin')->post('/subscribers',
+            $this->getTestSubscriberData());
 
-    //     // redirecting to subscribers index
-    //     $response->assertStatus(302);
-    //     $response->assertRedirect('/subscribers');
+        // redirecting to subscribers index
+        $response->assertStatus(302);
+        $response->assertRedirect('/subscribers');
 
-    //     // subscriber is returned in the data
-    //     $this->actingAs($this->admin, 'admin')->post('/subscribers',
-    //         $this->getTestSubscriberData());
+        // subscriber is returned in the data
+        $this->actingAs($this->admin, 'admin')->post('/subscribers',
+            $this->getTestSubscriberData());
 
-    //     $subscriber_data = $this->getLatestSubscriberData();
+        $subscriber_data = $this->getLatestSubscriberData();
 
-    //     $this->assertEquals($this->email, $subscriber_data['email']);
-    //     $this->assertEquals($this->name, $subscriber_data['name']);
-    //     $this->assertEquals($this->country, $subscriber_data['country']);
-    // }
+        $this->assertEquals($this->email, $subscriber_data['email']);
+        $this->assertEquals($this->name, $subscriber_data['name']);
+        $this->assertEquals($this->country, $subscriber_data['country']);
+    }
 
-    public function test_edit_page_opens_for_admin()
+    public function test_edit_page_contains_subscriber()
     {
         // create a subscriber
         $this->actingAs($this->admin, 'admin')->post('/subscribers',
