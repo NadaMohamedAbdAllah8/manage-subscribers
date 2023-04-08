@@ -63,4 +63,11 @@ class AdminLoginTest extends TestCase
         $this->assertEquals('Bad credentials', session('error'));
         $response->assertRedirect(route('admin.login'));
     }
+
+    public function test_logout_successfully()
+    {
+        $response = $this->post('/logout');
+
+        $response->assertRedirect('/login');
+    }
 }
