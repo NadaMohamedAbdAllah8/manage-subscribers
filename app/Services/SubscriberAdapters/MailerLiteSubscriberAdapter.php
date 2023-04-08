@@ -2,11 +2,12 @@
 
 namespace App\Services\SubscriberAdapters;
 
+use App\Http\Requests\Admin\Subscriber\StoreRequest;
+use App\Http\Requests\Admin\Subscriber\UpdateRequest;
 use App\Models\Setting;
 use App\Services\Subscriber;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\ClientException;
-use Illuminate\Http\Request;
 
 class MailerLiteSubscriberAdapter implements Subscriber
 {
@@ -75,7 +76,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
         }
     }
 
-    public function store($request): array
+    public function store(StoreRequest $request): array
     {
         // call api to store
         $client = new Client(['base_uri' => self::$base_uri]);
@@ -141,7 +142,7 @@ class MailerLiteSubscriberAdapter implements Subscriber
         }
     }
 
-    public function update($id, Request $request): array
+    public function update($id, UpdateRequest $request): array
     {
         // call api to store
         $client = new Client(['base_uri' => self::$base_uri]);

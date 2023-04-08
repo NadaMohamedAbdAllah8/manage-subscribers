@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\Subscriber\StoreRequest;
+use App\Http\Requests\Admin\Subscriber\UpdateRequest;
 use App\Services\Subscriber;
 use Illuminate\Http\Request;
 use Yajra\Datatables\Datatables;
@@ -112,7 +113,8 @@ class SubscriberController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    // push it after a week from 8-Apr-23
+    public function update(UpdateRequest $request, $id)
     {
         $result = $this->subscriber->update($id, $request);
         if ($result['success'] == false) {

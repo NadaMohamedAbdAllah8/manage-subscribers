@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Admin\Product;
+namespace App\Http\Requests\Admin\Subscriber;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
