@@ -24,6 +24,7 @@ class SubscriberController extends Controller
      */
     public function index()
     {
+
         if ($this->subscriber->validateAPIKey() == false) {
             $data = [
                 'title' => 'Subscribers',

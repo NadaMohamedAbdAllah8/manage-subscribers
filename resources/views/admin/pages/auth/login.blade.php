@@ -13,7 +13,6 @@
             <label for="username"><b>Email</b></label>
             <input type="email" placeholder="Enter Admin Email" name="email" id="username" required>
 
-
             <label for="psw"><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="password" id="psw" required>
 
